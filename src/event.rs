@@ -179,16 +179,11 @@ pub trait EventHandler {
 
     /// Default implementation emulates mouse clicks
     fn touch_event(&mut self, phase: TouchPhase, _id: u64, x: f32, y: f32) {
-        if phase == TouchPhase::Started {
-            self.mouse_button_down_event(MouseButton::Left, x, y);
-        }
-
-        if phase == TouchPhase::Ended {
-            self.mouse_button_up_event(MouseButton::Left, x, y);
-        }
-
-        if phase == TouchPhase::Moved {
-            self.mouse_motion_event(x, y);
+        match phase {
+            TouchPhase::Started => self.mouse_button_down_event(MouseButton::Left, x, y),
+            TouchPhase::Moved => self.mouse_motion_event(x, y),
+            TouchPhase::Ended => self.mouse_button_up_event(MouseButton::Left, x, y),
+            TouchPhase::Cancelled => self.mouse_button_up_event(MouseButton::Left, x, y),
         }
     }
 
